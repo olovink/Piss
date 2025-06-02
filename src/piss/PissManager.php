@@ -27,7 +27,7 @@ class PissManager {
             $this->playerData[$playerName]['coolDown'] = 0;
         }
 
-        if ($this->getTimeElapsed($playerName) <= $this->loader->getConfiguration()->getConfigData()['pissCoolDown']) {
+        if ($this->getTimeElapsed($playerName) <= $configData['pissCoolDown']) {
             $player->sendMessage(sprintf($configData['pissCoolDownMessage'], $this->getTimeRemaining($playerName)));
             return;
         }
@@ -41,17 +41,17 @@ class PissManager {
         if (!$player->spawned || !$player->isAlive()) {
             return;
         }
+        
         $motion = $player->getDirectionVector()->multiply(0.175);
         $motion->y += 0.2;
-
-        $item = ItemFactory::get(BlockIds::CONCRETE, 4); // yellow concrete
-
-        $itemTag = $item->nbtSerialize();
-        $itemTag->setName("ItemPiss");
-
+        
         $pos = $player->getPosition();
         $pos->y += 0.1;
-
+        
+        $item = ItemFactory::get(BlockIds::CONCRETE, 4); // yellow concrete
+        $itemTag = $item->nbtSerialize();
+        $itemTag->setName("ItemPiss");
+        
         $nbt = Entity::createBaseNBT($pos, $motion, Utils::getRandomFloat() * 360, 0);
         $nbt->setTag($itemTag);
 
